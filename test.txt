@@ -1,0 +1,48 @@
+ while run:
+        clock += pygame.time.Clock().tick(60) / 1000  # max 60 fps
+        events = pygame.event.get()
+        # W głównej pętli zdarzeń (w funkcji main())
+        for event in events:
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    game_paused = not game_paused
+
+            # Obsługa kliknięć myszy
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Sprawdź tylko lewy przycisk myszy
+                if menu_state == "main":
+                    if start_button.draw(window):
+                        menu_state = "play"
+                    elif change_button.draw(window):
+                        menu_state = "characters"
+                    elif quit_button.draw(window):
+                        run = False
+                elif menu_state == "characters":
+                    if dino_button.draw(window):
+                        dino_menu = True
+                        batman_menu = False
+                        pika_menu = False
+                        dino.update_character(dino_menu, batman_menu, pika_menu)  # Update character
+                        menu_state = "main"
+                    elif batman_button.draw(window):
+                        dino_menu = False
+                        batman_menu = True
+                        pika_menu = False
+                        dino.update_character(dino_menu, batman_menu, pika_menu)  # Update character
+                        menu_state = "main"
+                    elif pikachu_button.draw(window):
+                        dino_menu = False
+                        batman_menu = False
+                        pika_menu = True
+                        dino.update_character(dino_menu, batman_menu, pika_menu)  # Update character
+                        menu_state = "main"
+                elif menu_state == "play" and game_paused:
+                    if resume_button.draw(window):
+                        game_paused = False
+                    elif restart_button.draw(window):
+                        restart_game()
+                        menu_state = "main"
+                    elif quit_button.draw(window):
+                        run = False
+pygame.display.update()
